@@ -1,3 +1,4 @@
+from Card import *
 class Player:
     def __init__(self, name):
         self.name = name
@@ -12,6 +13,8 @@ class Player:
         self.N = 0
         self.cards.clear()
     def value(self):
+        #점수를 계산하여 리턴하는 함수
+        #밸류를 어떻게 받아올까?
         pass
 
 #ace는 1혹은 11로 모두 사용 가능

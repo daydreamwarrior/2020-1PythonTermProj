@@ -22,5 +22,4 @@ class Card:
         return self.suit
 
     def filename(self):  # 카드 이미지 파일 이름
-        print(self.getsuit() + str(self.value) + ".png")
         return self.getsuit() + str(self.value) + ".png"
