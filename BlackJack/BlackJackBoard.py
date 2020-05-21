@@ -1,8 +1,8 @@
 from tkinter import *
 from tkinter import font
 from winsound import *
-from CCard import *
-from CPlayer import *
+from Card import *
+from Player import *
 import random
 class BlackJack:
     def __init__(self):
@@ -74,6 +74,11 @@ class BlackJack:
         else:
             self.betMoney -= 50
 
+    def pressedB10(self):
+        pass
+    def pressedB1(self):
+        pass
+
     def deal(self):
         self.player.reset()
         self.dealer.reset()  # 카드 덱 52장 셔플링 0,1,,.51
@@ -104,6 +109,12 @@ class BlackJack:
         self.LcardsPlayer[self.player.inHand() - 1].place(x=250 + n * 30, y=350)
         self.LplayerPts.configure(text=str(self.player.value()))
         PlaySound('sounds/cardFlip1.wav', SND_FILENAME)
+    def pressedStay(self):
+        pass
+    def pressedDeal(self):
+        pass
+    def pressedAgain(self):
+        pass
 
     def pressedHit(self):
         self.nCardsPlayer += 1
