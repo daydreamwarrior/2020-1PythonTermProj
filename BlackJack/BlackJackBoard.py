@@ -18,8 +18,8 @@ class BlackJack:
         self.dealer = Player("dealer")
         self.betMoney = 0
         self.playerMoney = 1000
-        self.nCardsDealer = 0
-        self.nCardsPlayer = 0
+        self.nCardsDealer = 0 #딜러가 뽑은 카드 수?
+        self.nCardsPlayer = 0 #플레이어가 뽑은 카드 수?
         self.LcardsPlayer = []
         self.LcardsDealer = []
         self.deckN = 0
@@ -70,27 +70,45 @@ class BlackJack:
             self.LplayerMoney.configure(text="You have $" + str(self.playerMoney))
             self.Deal["state"] = "active"
             self.Deal["bg"] = "white"
-            PlaySound('sounds/chip.wav', SND_FILENAME)
+            PlaySound('Resources/sounds/chip.wav', SND_FILENAME)
         else:
             self.betMoney -= 50
 
     def pressedB10(self):
-        pass
-    def pressedB1(self):
-        pass
+        self.betMoney += 10
 
-    def deal(self):
+        if self.betMoney <= self.playerMoney:
+            self.LbetMoney.configure(text="$" + str(self.betMoney))
+            self.playerMoney -= 10
+            self.LplayerMoney.configure(text="You have $" + str(self.playerMoney))
+            self.Deal["state"] = "active"
+            self.Deal["bg"] = "white"
+            PlaySound('Resources/sounds/chip.wav', SND_FILENAME)
+        else:
+            self.betMoney -= 10
+    def pressedB1(self):
+        self.betMoney += 1
+
+        if self.betMoney <= self.playerMoney:
+            self.LbetMoney.configure(text="$" + str(self.betMoney))
+            self.playerMoney -= 1
+            self.LplayerMoney.configure(text="You have $" + str(self.playerMoney))
+            self.Deal["state"] = "active"
+            self.Deal["bg"] = "white"
+            PlaySound('Resources/sounds/chip.wav', SND_FILENAME)
+        else:
+            self.betMoney -= 1
+
+    def deal(self): #딜 처음 시작 때 불리는 세팅 함수
         self.player.reset()
         self.dealer.reset()  # 카드 덱 52장 셔플링 0,1,,.51
         self.cardDeck = [i for i in range(52)]
         random.shuffle(self.cardDeck)
         self.deckN =0
-        self.hitPlayer(0)
-        self.hitDealerDown()
-        self.hitPlayer(1)
-        self.hitDealer(0)
-        self.nCardsPlayer =1
-        self.nCardsDealer =0
+        #self.hitPlayer(0)
+        #self.hitDealerDown()
+        #self.hitPlayer(1)
+
         self.B50['state'] = 'disabled'
         self.B50['bg'] = 'gray'
         self.B10['state'] = 'disabled'
@@ -98,21 +116,71 @@ class BlackJack:
         self.B1['state'] = 'disabled'
         self.B1['bg'] = 'gray'
 
-    def hitPlayer(self, n):
+    def hitPlayer(self, n): #n은 카드의 위치
         newCard = Card(self.cardDeck[self.deckN])
         self.deckN += 1
         self.player.addCard(newCard)
-        p = PhotoImage(file="cards/" + newCard.filename())
+        p = PhotoImage(file="Resources/cards/" + newCard.filename())
         self.LcardsPlayer.append(Label(self.window, image=p))
         # 파이썬은 라벨 이미지 레퍼런스를 갖고 있어야 이미지가 보임
         self.LcardsPlayer[self.player.inHand() - 1].image = p
         self.LcardsPlayer[self.player.inHand() - 1].place(x=250 + n * 30, y=350)
         self.LplayerPts.configure(text=str(self.player.value()))
-        PlaySound('sounds/cardFlip1.wav', SND_FILENAME)
+        PlaySound('Resources/sounds/cardFlip1.wav', SND_FILENAME)
+
+    def hitDealerDown(self): #딜러는 히트없이 초반 카드 그대로임!
+        #딜러도 한 판에 52장 중 두개를 뽑아야 할 것 같아서 self.cardDeck 배열을 같이 사용하도록 함
+        #틀린것같다면 알려주세얌
+        self.nCardsDealer = 2
+        self.deckN += 1 #가려진 카드(찐카드)
+        DealerCard1= Card(self.cardDeck[self.deckN])  # 카드 덱에 저장되어잇는 0부터 52까지의 랜덤 숫자를 넘김
+        self.deckN += 1#공개된카드
+        DealerCard2 = Card(self.cardDeck[self.deckN])
+        self.dealer.addCard(DealerCard1)#self.dealer.cards[0]
+        self.dealer.addCard(DealerCard2)#self.dealer.cards[1]
+
+        #딜러의 첫 째 카드는 안 보여야 하므로 나오는 사진은 뒷면 사진으로 보이게 함
+        #뽑은 두장 카드도 출력하지만 그 위에 백 카드를 덮어 그리는 식으로 일단 짰습니다.
+        p1=PhotoImage(file='Resources/cards/b2fv.png')
+        p2 = PhotoImage(file='Resources/cards/' + DealerCard2.filename())
+        
+        self.LcardsDealer.append(Label(self.window, image=p1))
+        self.LcardsDealer.append(Label(self.window, image=p2))
+        self.LcardsDealer[0].image = p1
+        self.LcardsDealer[0].place(x=250 + 30, y=150)
+        self.LcardsDealer[1].image = p2
+        self.LcardsDealer[1].place(x=250 + 60, y=150)
+
     def pressedStay(self):
+        #딜러의 카드를 공개함
         pass
+
     def pressedDeal(self):
-        pass
+        #딜 버튼이 눌렸을때 할 일
+        #플레이어와 딜러에게 카드 두 장씩 나눠주기(플레이어는 오픈된 채로, 딜러는 한 장 뒤집은 채로)
+        self.deal()
+
+        #첫번째카드뽑기!
+
+        self.deckN+= 1
+        startCard1=Card(self.cardDeck[self.deckN]) #카드 덱에 저장되어잇는 0부터 52까지의 랜덤 숫자를 넘김
+        self.player.addCard(startCard1)
+        p1 = PhotoImage(file='Resources/cards/' + startCard1.filename())
+        self.LcardsPlayer.append(Label(self.window, image=p1))
+        self.LcardsPlayer[self.player.inHand() - 1].image = p1
+        self.LcardsPlayer[self.player.inHand() - 1].place(x=250 + 30, y=350)
+
+        self.deckN+=1
+        startCard2= Card(self.cardDeck[self.deckN])
+        self.player.addCard(startCard2)
+        p2 = PhotoImage(file='Resources/cards/' + startCard2.filename())
+        self.LcardsPlayer.append(Label(self.window, image=p2))
+        self.LcardsPlayer[self.player.inHand() - 1].image = p2
+        self.LcardsPlayer[self.player.inHand() - 1].place(x=250 + 60, y=350)
+
+        self.nCardsPlayer = 2  # 플레이어가 뽑은 카드 수?
+        self.hitDealerDown()
+
     def pressedAgain(self):
         pass
 
@@ -148,20 +216,20 @@ class BlackJack:
         self.LdealerPts.configure(text=str(self.dealer.value()))
         if self.player.value() > 21:
             self.Lstatus.configure(text="Player Busts")
-            PlaySound('sounds/wrong.wav', SND_FILENAME)
+            PlaySound('Resources/sounds/wrong.wav', SND_FILENAME)
         elif self.dealer.value() > 21:
             self.Lstatus.configure(text="Dealer Busts")
             self.playerMoney += self.betMoney * 2
-            PlaySound('sounds/win.wav', SND_FILENAME)
+            PlaySound('Resources/sounds/win.wav', SND_FILENAME)
         elif self.dealer.value() == self.player.value():
             self.Lstatus.configure(text="Push")
             self.playerMoney += self.betMoney
         elif self.dealer.value() < self.player.value():
             self.Lstatus.configure(text="You won!!")
             self.playerMoney += self.betMoney * 2
-            PlaySound('sounds/win.wav', SND_FILENAME)
+            PlaySound('Resources/sounds/win.wav', SND_FILENAME)
         else:
             self.Lstatus.configure(text="Sorry you lost!")
-            PlaySound('sounds/wrong.wav', SND_FILENAME)
+            PlaySound('Resources/sounds/wrong.wav', SND_FILENAME)
 
 BlackJack()
