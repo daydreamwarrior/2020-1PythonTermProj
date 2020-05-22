@@ -23,7 +23,6 @@ class BlackJack:
         self.LcardsPlayer = []#플레이어가 뽑은 카드의 라벨 리스트
         self.LcardsDealer = []#딜러가 뽑은 카드의 라벨 리스트
         self.deckN = 0
-        #self.playervalue=[]
         self.window.mainloop()
 
     def setupButton(self):
@@ -107,7 +106,6 @@ class BlackJack:
         random.shuffle(self.cardDeck)
         self.deckN =0
 
-
         #딜을 시작하면 버튼 상태가 바뀌어야 하므로 관련 코드 추가
         #히트와 스테이는 액티브 나머지는 disabled
 
@@ -129,9 +127,12 @@ class BlackJack:
         self.Again['bg'] = 'gray'
 
     def hitPlayer(self, n): #n은 카드의 위치
+
+        #이부분에서 플레이어 포인트가 21 이상일 때 게임오버 먼저 처리#
+
         newCard = Card(self.cardDeck[self.deckN])
         self.deckN += 1
-        self.player.addCard(newCard)
+        self.player.addCard(newCard.value,newCard.filename())
         p = PhotoImage(file="Resources/cards/" + newCard.filename())
         self.LcardsPlayer.append(Label(self.window, image=p))
         # 파이썬은 라벨 이미지 레퍼런스를 갖고 있어야 이미지가 보임
@@ -139,18 +140,16 @@ class BlackJack:
         self.LcardsPlayer[self.player.inHand() - 1].place(x=250 + n * 30, y=350)
         self.LplayerPts.configure(text=str(self.player.value()))
         PlaySound('Resources/sounds/cardFlip1.wav', SND_FILENAME)
-        print(self.playervalue)
 
     def hitDealer(self): #딜러는 히트없이 초반 카드 그대로임!
         #딜러도 한 판에 52장 중 두개를 뽑아야 할 것 같아서 self.cardDeck 배열을 같이 사용하도록 함
-        #틀린것같다면 알려주세얌
 
         self.deckN += 1 #가려진 카드
         DealerCard1= Card(self.cardDeck[self.deckN])
         self.deckN += 1#공개된카드
         DealerCard2 = Card(self.cardDeck[self.deckN])
-        self.dealer.addCard(DealerCard1)#self.dealer.cards[0]
-        self.dealer.addCard(DealerCard2)#self.dealer.cards[1]
+        self.dealer.addCard(DealerCard1.value,DealerCard1.filename())
+        self.dealer.addCard(DealerCard2.value,DealerCard2.filename())
 
         p1=PhotoImage(file='Resources/cards/b2fv.png') #카드 가려줄 뒷면 이미지! 추후 지워짐(리스트에 추가할필요 없음)
         p2=PhotoImage(file='Resources/cards/' + DealerCard2.filename())
@@ -163,40 +162,46 @@ class BlackJack:
         self.LcardsDealer[1].place(x=250 + 60, y=150)
 
         self.nCardsDealer = 2
-        #self.LplayerPts.configure(text=str(self.player.value()))
+        print("겟밸류",self.dealer.cards)
+        self.LdealerPts.configure(text=str(self.dealer.value()))
+        #print(self.dealer.cards[0].getValue())
 
     def pressedStay(self):
         #딜러의 카드를 공개함
-        p1 = PhotoImage(file="Resources/cards/" + self.dealer.cards[0].filename())
+        p1 = PhotoImage(file="Resources/cards/" + self.dealer.cards[0][1])
         self.LcardsDealer[0].configure(image=p1)  # 이미지 레퍼런스 변경
         self.LcardsDealer[0].image = p1  # 파이썬은 라벨 이미지 레퍼런스를 갖고 있어야 이미지가 보임
-        #self.LdealerPts.configure(text=str(self.dealer.value()))
         self.checkWinner()
 
 
     def pressedDeal(self):
         #딜 버튼이 눌렸을때 할 일
         #플레이어와 딜러에게 카드 두 장씩 나눠주기(플레이어는 오픈된 채로, 딜러는 한 장 뒤집은 채로)
+        #근데 딜러가 17 제한은 뭔말인지 모르겟다. 일단 냅둔다.
         self.deal()
 
         #첫번째카드뽑기!
         self.deckN+= 1
         startCard1=Card(self.cardDeck[self.deckN]) #카드 덱에 저장되어잇는 0부터 52까지의 랜덤 숫자를 넘김
-        self.player.addCard(startCard1)
+        self.player.addCard(startCard1.value,startCard1.filename())
         p1 = PhotoImage(file='Resources/cards/' + startCard1.filename())
         self.LcardsPlayer.append(Label(self.window, image=p1))
         self.LcardsPlayer[self.player.inHand() - 1].image = p1
         self.LcardsPlayer[self.player.inHand() - 1].place(x=250 + 30, y=350)
 
+        #두번째 카드 뽑기!
         self.deckN+=1
         startCard2= Card(self.cardDeck[self.deckN])
-        self.player.addCard(startCard2)
+        self.player.addCard(startCard2.value,startCard2.filename())
         p2 = PhotoImage(file='Resources/cards/' + startCard2.filename())
         self.LcardsPlayer.append(Label(self.window, image=p2))
         self.LcardsPlayer[self.player.inHand() - 1].image = p2
         self.LcardsPlayer[self.player.inHand() - 1].place(x=250 + 60, y=350)
 
         self.nCardsPlayer = 2  # 플레이어가 뽑은 카드 수?
+
+        #플레이어가 뽑은 카드에 따른 점수를 카드 위 라벨에 업데이트한다.
+        self.LplayerPts.configure(text=str(self.player.value()))
         self.hitDealer()
 
     def pressedAgain(self):
@@ -206,7 +211,7 @@ class BlackJack:
     def pressedHit(self):
         self.nCardsPlayer += 1
         self.hitPlayer(self.nCardsPlayer)
-        #if self.player.value() >= 21: #21점 이상?21점 초과?
+        #if self.player.value() > 21: #21점 초과?
             #self.checkWinner()
 
     def checkWinner(self):
@@ -229,7 +234,7 @@ class BlackJack:
         self.Again['bg'] = 'white'
 
         # 뒤집힌 카드를 다시 그린다.
-        p = PhotoImage(file="Resources/cards/" + self.dealer.cards[0].filename())
+        p = PhotoImage(file="Resources/cards/" + self.dealer.cards[0][1])
         self.LcardsDealer[0].configure(image=p)  # 이미지 레퍼런스 변경
         self.LcardsDealer[0].image = p  # 파이썬은 라벨 이미지 레퍼런스를 갖고 있어야 이미지가 보임
         self.LdealerPts.configure(text=str(self.dealer.value()))

@@ -1,0 +1,12 @@
+Player 클래스에 할당되는 객체는 플레이어/딜러 로 나뉨(self.player/ self.dealer)
+
+게임에서 딜을 시작하면 플레이어와 딜러가 각각 player 클래스에 할당됨
+AddCards()를 통해 player 클래스의 이중 리스트 self.cards 에 플레이어와 딜러가 뽑은 카드의 정보를 각각 담음.
+리스트 내용[카드의 value(점수),카드의 filename]
+#카드의 filename은 스테이를 누른 후 딜러의 카드가 뒤집어질 때 필요하므로 공통적으로 다 담음#
+
+ex)딜러가 스페이드 9를 첫 번째에 뽑은 경우
+self.dealer의 self.cards=[[9,"spade9.png"], ,]
+따라서 딜러가 첫 번째 뽑은 카드의 점수(숫자)를 알고 싶은 경우
+self.dealer[0][0] 으로 접근하면 됨
+
