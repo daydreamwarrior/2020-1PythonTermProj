@@ -132,7 +132,7 @@ class BlackJack:
 
         newCard = Card(self.cardDeck[self.deckN])
         self.deckN += 1
-        self.player.addCard(newCard.value,newCard.filename())
+        self.player.addCard(newCard.getValue(),newCard.filename())
         p = PhotoImage(file="Resources/cards/" + newCard.filename())
         self.LcardsPlayer.append(Label(self.window, image=p))
         # 파이썬은 라벨 이미지 레퍼런스를 갖고 있어야 이미지가 보임
@@ -148,8 +148,8 @@ class BlackJack:
         DealerCard1= Card(self.cardDeck[self.deckN])
         self.deckN += 1#공개된카드
         DealerCard2 = Card(self.cardDeck[self.deckN])
-        self.dealer.addCard(DealerCard1.value,DealerCard1.filename())
-        self.dealer.addCard(DealerCard2.value,DealerCard2.filename())
+        self.dealer.addCard(DealerCard1.getValue(),DealerCard1.filename())
+        self.dealer.addCard(DealerCard2.getValue(),DealerCard2.filename())
 
         p1=PhotoImage(file='Resources/cards/b2fv.png') #카드 가려줄 뒷면 이미지! 추후 지워짐(리스트에 추가할필요 없음)
         p2=PhotoImage(file='Resources/cards/' + DealerCard2.filename())
@@ -183,7 +183,7 @@ class BlackJack:
         #첫번째카드뽑기!
         self.deckN+= 1
         startCard1=Card(self.cardDeck[self.deckN]) #카드 덱에 저장되어잇는 0부터 52까지의 랜덤 숫자를 넘김
-        self.player.addCard(startCard1.value,startCard1.filename())
+        self.player.addCard(startCard1.getValue(),startCard1.filename())
         p1 = PhotoImage(file='Resources/cards/' + startCard1.filename())
         self.LcardsPlayer.append(Label(self.window, image=p1))
         self.LcardsPlayer[self.player.inHand() - 1].image = p1
@@ -192,7 +192,7 @@ class BlackJack:
         #두번째 카드 뽑기!
         self.deckN+=1
         startCard2= Card(self.cardDeck[self.deckN])
-        self.player.addCard(startCard2.value,startCard2.filename())
+        self.player.addCard(startCard2.getValue(),startCard2.filename())
         p2 = PhotoImage(file='Resources/cards/' + startCard2.filename())
         self.LcardsPlayer.append(Label(self.window, image=p2))
         self.LcardsPlayer[self.player.inHand() - 1].image = p2
