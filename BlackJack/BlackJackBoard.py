@@ -20,9 +20,10 @@ class BlackJack:
         self.playerMoney = 1000
         self.nCardsDealer = 0 #딜러가 뽑은 카드 수?
         self.nCardsPlayer = 0 #플레이어가 뽑은 카드 수?
-        self.LcardsPlayer = []#플레이어가 뽑은 카드의 리스트
-        self.LcardsDealer = []#딜러가 뽑은 카드의 리스트
+        self.LcardsPlayer = []#플레이어가 뽑은 카드의 라벨 리스트
+        self.LcardsDealer = []#딜러가 뽑은 카드의 라벨 리스트
         self.deckN = 0
+        #self.playervalue=[]
         self.window.mainloop()
 
     def setupButton(self):
@@ -138,6 +139,7 @@ class BlackJack:
         self.LcardsPlayer[self.player.inHand() - 1].place(x=250 + n * 30, y=350)
         self.LplayerPts.configure(text=str(self.player.value()))
         PlaySound('Resources/sounds/cardFlip1.wav', SND_FILENAME)
+        print(self.playervalue)
 
     def hitDealer(self): #딜러는 히트없이 초반 카드 그대로임!
         #딜러도 한 판에 52장 중 두개를 뽑아야 할 것 같아서 self.cardDeck 배열을 같이 사용하도록 함
@@ -227,7 +229,7 @@ class BlackJack:
         self.Again['bg'] = 'white'
 
         # 뒤집힌 카드를 다시 그린다.
-        p = PhotoImage(file="cards/" + self.dealer.cards[0].filename())
+        p = PhotoImage(file="Resources/cards/" + self.dealer.cards[0].filename())
         self.LcardsDealer[0].configure(image=p)  # 이미지 레퍼런스 변경
         self.LcardsDealer[0].image = p  # 파이썬은 라벨 이미지 레퍼런스를 갖고 있어야 이미지가 보임
         self.LdealerPts.configure(text=str(self.dealer.value()))

@@ -1,4 +1,3 @@
-from Card import *
 class Player:
     def __init__(self, name):
         self.name = name
@@ -9,6 +8,7 @@ class Player:
     def addCard(self,c):
         self.cards.append(c)
         self.N += 1
+        return c
     def reset(self):
         self.N = 0
         self.cards.clear()
