@@ -145,14 +145,14 @@ class BlackJack:
         #딜러도 한 판에 52장 중 두개를 뽑아야 할 것 같아서 self.cardDeck 배열을 같이 사용하도록 함
 
         self.deckN += 1 #가려진 카드
-        DealerCard1= Card(self.cardDeck[self.deckN])
+        self.DealerCard1= Card(self.cardDeck[self.deckN])
         self.deckN += 1#공개된카드
-        DealerCard2 = Card(self.cardDeck[self.deckN])
-        self.dealer.addCard(DealerCard1.getValue(),DealerCard1.filename())
-        self.dealer.addCard(DealerCard2.getValue(),DealerCard2.filename())
+        self.DealerCard2 = Card(self.cardDeck[self.deckN])
+        self.dealer.addCard(self.DealerCard1.getValue(),self.DealerCard1.filename())
+        self.dealer.addCard(self.DealerCard2.getValue(),self.DealerCard2.filename())
 
         p1=PhotoImage(file='Resources/cards/b2fv.png') #카드 가려줄 뒷면 이미지! 추후 지워짐(리스트에 추가할필요 없음)
-        p2=PhotoImage(file='Resources/cards/' + DealerCard2.filename())
+        p2=PhotoImage(file='Resources/cards/' + self.DealerCard2.filename())
         
         self.LcardsDealer.append(Label(self.window, image=p1))
         self.LcardsDealer.append(Label(self.window, image=p2))
@@ -182,20 +182,20 @@ class BlackJack:
 
         #첫번째카드뽑기!
         self.deckN+= 1
-        startCard1=Card(self.cardDeck[self.deckN]) #카드 덱에 저장되어잇는 0부터 52까지의 랜덤 숫자를 넘김
-        self.player.addCard(startCard1.getValue(),startCard1.filename())
-        p1 = PhotoImage(file='Resources/cards/' + startCard1.filename())
-        self.LcardsPlayer.append(Label(self.window, image=p1))
-        self.LcardsPlayer[self.player.inHand() - 1].image = p1
+        self.startCard1=Card(self.cardDeck[self.deckN]) #카드 덱에 저장되어잇는 0부터 52까지의 랜덤 숫자를 넘김
+        self.player.addCard(self.startCard1.getValue(),self.startCard1.filename())
+        self.p1 = PhotoImage(file='Resources/cards/' + self.startCard1.filename())
+        self.LcardsPlayer.append(Label(self.window, image=self.p1))
+        self.LcardsPlayer[self.player.inHand() - 1].image = self.p1
         self.LcardsPlayer[self.player.inHand() - 1].place(x=250 + 30, y=350)
 
         #두번째 카드 뽑기!
         self.deckN+=1
-        startCard2= Card(self.cardDeck[self.deckN])
-        self.player.addCard(startCard2.getValue(),startCard2.filename())
-        p2 = PhotoImage(file='Resources/cards/' + startCard2.filename())
-        self.LcardsPlayer.append(Label(self.window, image=p2))
-        self.LcardsPlayer[self.player.inHand() - 1].image = p2
+        self.startCard2= Card(self.cardDeck[self.deckN])
+        self.player.addCard(self.startCard2.getValue(),self.startCard2.filename())
+        self.p2 = PhotoImage(file='Resources/cards/' + self.startCard2.filename())
+        self.LcardsPlayer.append(Label(self.window, image=self.p2))
+        self.LcardsPlayer[self.player.inHand() - 1].image = self.p2
         self.LcardsPlayer[self.player.inHand() - 1].place(x=250 + 60, y=350)
 
         self.nCardsPlayer = 2  # 플레이어가 뽑은 카드 수?
@@ -205,8 +205,36 @@ class BlackJack:
         self.hitDealer()
 
     def pressedAgain(self):
-        #게임 재시작. 돈 유지 및 카드 치워버리기
-        pass
+        #사용한 변수 초기화 --> 세팅은 deal()에서
+
+        #카드는 함수 안에서 할당되니 지울필요 x..?
+
+        p=PhotoImage(file="")
+
+        self.cardDeck.clear()
+        self.LcardsPlayer.clear()
+        self.LcardsDealer.clear()
+        self.player.reset()
+        self.dealer.reset()
+        self.deckN=0
+        self.nCardsPlayer=0
+        self.nCardsDealer=0
+
+        #이미지 어케 지우는지 모르겠 어,,,
+        #self.p1.configure(img='')
+
+        #버튼 라벨 초기화는 정상 작동
+        self.setupButton()
+        self.LplayerPts.configure(text="")
+        self.LdealerPts.configure(text="")
+        self.Lstatus.configure(text="")
+
+        del self.DealerCard1
+        del self.DealerCard2
+        del self.startCard1
+        del self.startCard2
+
+        print(self.p1)
 
     def pressedHit(self):
         self.nCardsPlayer += 1

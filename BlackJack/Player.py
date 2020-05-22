@@ -19,6 +19,9 @@ class Player:
         for i in range(len(self.cards)):
             val+=int(self.cards[i][0])
         return val
+    def reset(self):
+        self.cards.clear()
+        self.N=0
 
 #ace는 1혹은 11로 모두 사용 가능
 #일단 11로 계산한 후 21이 넘어가면 1로 정정
