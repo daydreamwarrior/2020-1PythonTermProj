@@ -102,10 +102,11 @@ class BlackJack:
 
     def deal(self): #딜 처음 시작 때 불리는 세팅 함수
         self.player.reset()
-        self.dealer.reset()  # 카드 덱 52장 셔플링 0,1,,.51
+        self.dealer.reset()
+        # 카드 덱 52장 셔플링 0,1,,.51
         self.cardDeck = [i for i in range(52)]
         random.shuffle(self.cardDeck)
-
+        print(self.cardDeck)
         #딜을 시작하면 버튼 상태가 바뀌어야 하므로 관련 코드 추가
         #히트와 스테이는 액티브 나머지는 disabled
 
@@ -132,10 +133,10 @@ class BlackJack:
         self.cardsphotoimage[self.deckN] = Card(self.cardDeck[self.deckN])
         self.player.addCard(self.cardsphotoimage[self.deckN].getValue(),self.cardsphotoimage[self.deckN].filename())
         p1 = PhotoImage(file="Resources/cards/" + self.cardsphotoimage[self.deckN].filename())
-        self.LcardsPlayer.append(Label(self.window, image=p1))
+        self.LcardsPlayer.append(Label(self.window, image=p1,bd=0))
         self.LcardsPlayer[self.player.inHand() - 1].image = p1
         self.LcardsPlayer[self.player.inHand() - 1].place(x=250 + n * 30, y=350)
-
+        print("플레이어 히트 인핸드:", self.player.inHand() - 1)
         self.LplayerPts.configure(text=str(self.player.value()))
         PlaySound('Resources/sounds/cardFlip1.wav', SND_FILENAME)
 
@@ -145,7 +146,7 @@ class BlackJack:
         self.cardsphotoimage[self.deckN]= Card(self.cardDeck[self.deckN])
         self.dealer.addCard(self.cardsphotoimage[self.deckN].getValue(),self.cardsphotoimage[self.deckN].filename())
         p1 = PhotoImage(file='Resources/cards/b2fv.png')  # 카드 가려줄 뒷면 이미지! 추후 지워짐(리스트에 추가할필요 없음)
-        self.LcardsDealer.append(Label(self.window, image=p1))
+        self.LcardsDealer.append(Label(self.window, image=p1,bd=0))
         self.LcardsDealer[self.dealer.inHand() - 1].image = p1
         self.LcardsDealer[self.dealer.inHand() - 1].place(x=250 + 30, y=150)
 
@@ -154,10 +155,10 @@ class BlackJack:
         self.cardsphotoimage[self.deckN] = Card(self.cardDeck[self.deckN])
         self.dealer.addCard(self.cardsphotoimage[self.deckN].getValue(),self.cardsphotoimage[self.deckN].filename())
         p2=PhotoImage(file='Resources/cards/' + self.cardsphotoimage[self.deckN].filename())
-        self.LcardsDealer.append(Label(self.window, image=p2))
+        self.LcardsDealer.append(Label(self.window, image=p2,bd=0))
+        self.LcardsDealer.append(Label(self.window, image=p2,bd=0))
         self.LcardsDealer[self.dealer.inHand() - 1].image = p2
         self.LcardsDealer[self.dealer.inHand() - 1].place(x=250 + 60, y=150)
-
         self.nCardsDealer = 2
         self.LdealerPts.configure(text=str(self.dealer.value()))
 
@@ -175,22 +176,28 @@ class BlackJack:
         #근데 딜러가 17 제한은 뭔말인지 모르겟다. 일단 냅둔다.
         self.deal()
         #첫번째카드뽑기!
+        print("카드덱의 [0]", self.cardDeck[self.deckN])
+        print("포토이미지",self.cardsphotoimage)
+
         self.cardsphotoimage[self.deckN]=Card(self.cardDeck[self.deckN]) #카드 덱에 저장되어잇는 0부터 52까지의 랜덤 숫자를 넘김
+
         self.player.addCard(self.cardsphotoimage[self.deckN].getValue(),self.cardsphotoimage[self.deckN].filename())
         p1 = PhotoImage(file='Resources/cards/' + self.cardsphotoimage[self.deckN].filename())
-        self.LcardsPlayer.append(Label(self.window, image=p1))
-        self.LcardsPlayer[self.player.inHand() - 1].image = p1
-        self.LcardsPlayer[self.player.inHand() - 1].place(x=250 + 30, y=350)
-
+        self.LcardsPlayer.append(Label(self.window, image=p1,bd=0))
+        self.LcardsPlayer.append(Label(self.window, image=p1,bd=0))
+        self.LcardsPlayer[self.player.inHand()-1].image = p1
+        self.LcardsPlayer[self.player.inHand()-1].place(x=250 + 30, y=350)
+        #print("deckn:",self.deckN,"플레이어 인핸드:", self.player.inHand())
         #두번째 카드 뽑기!
+
         self.deckN+=1
         self.cardsphotoimage[self.deckN]= Card(self.cardDeck[self.deckN])
         self.player.addCard(self.cardsphotoimage[self.deckN].getValue(),self.cardsphotoimage[self.deckN].filename())
         p2 = PhotoImage(file='Resources/cards/' + self.player.cards[1][1])
-        self.LcardsPlayer.append(Label(self.window, image=p2))
-        self.LcardsPlayer[self.player.inHand() - 1].image = p2
-        self.LcardsPlayer[self.player.inHand() - 1].place(x=250 + 60, y=350)
-
+        self.LcardsPlayer.append(Label(self.window, image=p2,bd=0))
+        self.LcardsPlayer[self.player.inHand()-1].image = p2
+        self.LcardsPlayer[self.player.inHand()-1].place(x=250 + 60, y=350)
+        #print("deckn:",self.deckN,"플레이어 인핸드:", self.player.inHand())
         self.nCardsPlayer = 2  # 플레이어가 뽑은 카드 수?
 
         #플레이어가 뽑은 카드에 따른 점수를 카드 위 라벨에 업데이트한다.
@@ -199,35 +206,31 @@ class BlackJack:
 
     def updatePlayerCards(self, i):
         p = PhotoImage(file='Resources/cards/' + self.player.cards[i][1])
-        self.LcardsPlayer.append(Label(self.window, image=p))
+        self.LcardsPlayer.append(Label(self.window, image=p,bd=0))
         self.LcardsPlayer[i].image = p
         self.LcardsPlayer[i].place(x=250 + (i+1)*30, y=350)
 
     def updateDealerCards(self, i):
         p = PhotoImage(file='Resources/cards/' + self.dealer.cards[i][1])
-        self.LcardsPlayer.append(Label(self.window, image=p))
+        self.LcardsDealer.append(Label(self.window, image=p,bd=0))
         self.LcardsDealer[i].image = p
         self.LcardsDealer[i].place(x=250 + (i+1)*30, y=150)
 
     def pressedAgain(self):
         #사용한 변수 초기화 --> 세팅은 deal()에서
-        print(self.dealer.cards)
         #카드는 함수 안에서 할당되니 지울필요 x..?
         self.cardDeck.clear()
         self.LcardsPlayer.clear()
         self.LcardsDealer.clear()
+        self.cardsphotoimage.clear()
+
         for i in range (len(self.player.cards)):
             self.player.cards[i][1]='clearcards_Again.png'
             self.updatePlayerCards(i)
-        print(len(self.dealer.cards))
-        for i in range (len(self.dealer.cards)):
-            print(i)
+        for i in range (self.dealer.inHand()):
             self.dealer.cards[i][1]='clearcards_Again.png'
             self.updateDealerCards(i)
 
-
-        self.player.reset()
-        self.dealer.reset()
         self.deckN=0
         self.nCardsPlayer=0
         self.nCardsDealer=0
