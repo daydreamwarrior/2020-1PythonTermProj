@@ -18,8 +18,8 @@ class BlackJack:
         self.dealer = Player("dealer")
         self.betMoney = 0
         self.playerMoney = 1000
-        self.nCardsDealer = 0 #딜러가 뽑은 카드 수?
-        self.nCardsPlayer = 0 #플레이어가 뽑은 카드 수?
+        #self.nCardsDealer = 0 #딜러가 뽑은 카드 수?
+        #self.nCardsPlayer = 0 #플레이어가 뽑은 카드 수?
         self.LcardsPlayer = []#플레이어가 뽑은 카드의 라벨 리스트
         self.LcardsDealer = []#딜러가 뽑은 카드의 라벨 리스트
         self.deckN = 0
@@ -103,6 +103,7 @@ class BlackJack:
     def deal(self): #딜 처음 시작 때 불리는 세팅 함수
         self.player.reset()
         self.dealer.reset()
+
         # 카드 덱 52장 셔플링 0,1,,.51
         self.cardDeck = [i for i in range(52)]
         random.shuffle(self.cardDeck)
@@ -159,7 +160,7 @@ class BlackJack:
         self.LcardsDealer.append(Label(self.window, image=p2,bd=0))
         self.LcardsDealer[self.dealer.inHand() - 1].image = p2
         self.LcardsDealer[self.dealer.inHand() - 1].place(x=250 + 60, y=150)
-        self.nCardsDealer = 2
+        #self.nCardsDealer = 2
         self.LdealerPts.configure(text=str(self.dealer.value()))
 
     def pressedStay(self):
@@ -168,7 +169,6 @@ class BlackJack:
         self.LcardsDealer[0].configure(image=self.cardsphotoimage[3])  # 이미지 레퍼런스 변경
         self.LcardsDealer[0].image = self.cardsphotoimage[3]  # 파이썬은 라벨 이미지 레퍼런스를 갖고 있어야 이미지가 보임
         self.checkWinner()
-
 
     def pressedDeal(self):
         #딜 버튼이 눌렸을때 할 일
@@ -179,7 +179,7 @@ class BlackJack:
         print("카드덱의 [0]", self.cardDeck[self.deckN])
         print("포토이미지",self.cardsphotoimage)
 
-        self.cardsphotoimage[self.deckN]=Card(self.cardDeck[self.deckN]) #카드 덱에 저장되어잇는 0부터 52까지의 랜덤 숫자를 넘김
+        self.cardsphotoimage[self.deckN]=Card(self.cardDeck[self.deckN]) #카드 덱에 저장되어있는 0부터 52까지의 랜덤 숫자를 넘김
 
         self.player.addCard(self.cardsphotoimage[self.deckN].getValue(),self.cardsphotoimage[self.deckN].filename())
         p1 = PhotoImage(file='Resources/cards/' + self.cardsphotoimage[self.deckN].filename())
@@ -233,7 +233,7 @@ class BlackJack:
 
         self.deckN=0
         self.nCardsPlayer=0
-        self.nCardsDealer=0
+        #self.nCardsDealer=0
 
         #버튼 라벨 초기화는 정상 작동
         self.setupButton()
@@ -245,8 +245,8 @@ class BlackJack:
     def pressedHit(self):
         self.nCardsPlayer += 1
         self.hitPlayer(self.nCardsPlayer)
-        #if self.player.value() > 21: #21점 초과?
-            #self.checkWinner()
+        if self.player.value() > 21: #21점 초과?
+            self.checkWinner()
 
     def checkWinner(self):
         self.betMoney = 0

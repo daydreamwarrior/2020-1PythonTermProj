@@ -4,6 +4,7 @@ class Card:
         self.value = temp % 13 + 1  # 1..13
         self.x = temp // 13  # 0..3 카드 무늬suit 결정
 
+
     def getValue(self):  # 카드 값 JQK는 10으로 결정
         if self.value > 10:
             return 10

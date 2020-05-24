@@ -13,7 +13,15 @@ class Player:
     def value(self):
         val=0
         for i in range(len(self.cards)):
-            val+=int(self.cards[i][0])
+            if int(self.cards[i][0])==1: #ace
+                val+=11
+            else:
+                val+=int(self.cards[i][0])
+
+        for i in range(len(self.cards)):
+            if val>21 and int(self.cards[i][0])==1:
+                val-=10
+
         return val
     def reset(self):
         self.cards.clear()
