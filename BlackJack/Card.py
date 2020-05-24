@@ -23,3 +23,8 @@ class Card:
 
     def filename(self):  # 카드 이미지 파일 이름
         return self.getsuit() + str(self.value) + ".png"
+
+    def reset(self):
+        self.value=0
+        self.x=0
+        #l.filename= 'Resources/cards/clearcards_Again.png'

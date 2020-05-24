@@ -7,7 +7,6 @@ class Player:
     def inHand(self):
         return self.N
     def addCard(self,c,f):
-        print("카드 정보:",c,f)
         self.cards.append([c,f])
         self.N += 1
         return c
