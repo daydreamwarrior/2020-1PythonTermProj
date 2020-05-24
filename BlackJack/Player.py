@@ -24,6 +24,7 @@ class Player:
                 val-=10
 
         return val
+
     def reset(self):
         self.cards.clear()
         self.N=0

@@ -131,6 +131,7 @@ class BlackJack:
         #이부분에서 플레이어 포인트가 21 이상일 때 게임오버 먼저 처리#
         self.deckN += 1
         self.cardsphotoimage[self.deckN] = Card(self.cardDeck[self.deckN])
+        self.cardsphotoimage[self.deckN] = Card(self.cardDeck[self.deckN])
         self.player.addCard(self.cardsphotoimage[self.deckN].getValue(),self.cardsphotoimage[self.deckN].filename())
         self.updatePlayerCards(self.player.inHand()-1)
         self.LplayerPts.configure(text=str(self.player.value()))
@@ -154,7 +155,7 @@ class BlackJack:
         self.LdealerPts.configure(text=str(self.dealer.value()))
 
     def pressedStay(self):
-        self.checkWinner()
+        self.afterStay()
 
     def pressedDeal(self):
         #딜 버튼이 눌렸을때 할 일
@@ -231,6 +232,18 @@ class BlackJack:
         self.nCardsPlayer += 1
         self.hitPlayer(self.nCardsPlayer)
         if self.player.value() > 21: #21점 초과?
+            self.checkWinner()
+
+    def afterStay(self):  #딜러의 카드 추가
+        while self.dealer.value() < 17:
+            self.deckN += 1  # 공개된카드
+            test = Card(self.cardDeck[self.deckN])
+            self.dealer.addCard(test.getValue(), test.filename())
+            self.updateDealerCards(self.dealer.inHand() - 1)
+            self.LdealerPts.configure(text=str(self.dealer.value()))
+            if self.dealer.value() >= 17:
+                self.checkWinner()
+        else:
             self.checkWinner()
 
     def checkWinner(self):
