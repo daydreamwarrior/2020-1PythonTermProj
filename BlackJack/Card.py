@@ -1,14 +1,18 @@
 class Card:
-    def __init__(self, temp):  # 렌덤 넘버0..51 값을 입력받아서 카드 객체 생성
+    def __init__(self, temp):  # 랜덤 넘버0..51 값을 입력받아서 카드 객체 생성
         self.value = temp % 13 + 1  # 1..13
-        print(self.value)
+        #print(self.value)
         self.x = temp // 13  # 0..3 카드 무늬suit 결정
 
-    def getValue(self):  # 카드 값 JQK는 10으로 결정
-        if self.value > 10:
+    def getValue(self, temp):  # 카드 값 JQK는 10으로 결정
+        self.compareNum = temp
+        if self.compareNum > 10:
             return 10
+        if self.compareNum == 1:
+            return 11
         else:
-            return self.value
+            return self.compareNum
+
 
     def getsuit(self):  # 카드 무늬 결정
         if self.x == 0:

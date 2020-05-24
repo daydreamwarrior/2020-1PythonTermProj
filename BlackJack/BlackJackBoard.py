@@ -23,6 +23,8 @@ class BlackJack:
         self.LcardsPlayer = []#플레이어가 뽑은 카드의 리스트
         self.LcardsDealer = []#딜러가 뽑은 카드의 리스트
         self.deckN = 0
+        self.playerCntValue = 0
+        self.dealerCntValue = 0
         self.window.mainloop()
 
     def setupButton(self):
@@ -106,6 +108,14 @@ class BlackJack:
         random.shuffle(self.cardDeck)
         self.deckN =0
 
+        # 피피티에 있는 것
+
+        # self.hitPlayer(0)
+        # self.hitDealerDown()
+        # self.hitPlayer(1)
+        # self.hitDealer(0)
+        # self.nCardsPlayer =1
+        # self.nCardsDealer =0
 
         #딜을 시작하면 버튼 상태가 바뀌어야 하므로 관련 코드 추가
         #히트와 스테이는 액티브 나머지는 disabled
@@ -127,6 +137,8 @@ class BlackJack:
         self.Again['state'] = 'disabled'
         self.Again['bg'] = 'gray'
 
+
+
     def hitPlayer(self, n): #n은 카드의 위치
         newCard = Card(self.cardDeck[self.deckN])
         self.deckN += 1
@@ -145,10 +157,14 @@ class BlackJack:
 
         self.deckN += 1 #가려진 카드
         DealerCard1= Card(self.cardDeck[self.deckN])
+
         self.deckN += 1#공개된카드
         DealerCard2 = Card(self.cardDeck[self.deckN])
+
         self.dealer.addCard(DealerCard1)#self.dealer.cards[0]
+        #self.dealerCntValue += self.dealer.value()
         self.dealer.addCard(DealerCard2)#self.dealer.cards[1]
+        #self.dealerCntValue += self.dealer.value()
 
         p1=PhotoImage(file='Resources/cards/b2fv.png') #카드 가려줄 뒷면 이미지! 추후 지워짐(리스트에 추가할필요 없음)
         p2=PhotoImage(file='Resources/cards/' + DealerCard2.filename())
@@ -161,14 +177,14 @@ class BlackJack:
         self.LcardsDealer[1].place(x=250 + 60, y=150)
 
         self.nCardsDealer = 2
-        #self.LplayerPts.configure(text=str(self.player.value()))
+        self.LplayerPts.configure(text=str(self.player.value()))
 
     def pressedStay(self):
         #딜러의 카드를 공개함
         p1 = PhotoImage(file="Resources/cards/" + self.dealer.cards[0].filename())
         self.LcardsDealer[0].configure(image=p1)  # 이미지 레퍼런스 변경
         self.LcardsDealer[0].image = p1  # 파이썬은 라벨 이미지 레퍼런스를 갖고 있어야 이미지가 보임
-        #self.LdealerPts.configure(text=str(self.dealer.value()))
+        self.LdealerPts.configure(text=str(self.dealer.value()))
         self.checkWinner()
 
 
@@ -181,6 +197,7 @@ class BlackJack:
         self.deckN+= 1
         startCard1=Card(self.cardDeck[self.deckN]) #카드 덱에 저장되어잇는 0부터 52까지의 랜덤 숫자를 넘김
         self.player.addCard(startCard1)
+        #self.playerCntValue += self.player.value()
         p1 = PhotoImage(file='Resources/cards/' + startCard1.filename())
         self.LcardsPlayer.append(Label(self.window, image=p1))
         self.LcardsPlayer[self.player.inHand() - 1].image = p1
@@ -189,6 +206,7 @@ class BlackJack:
         self.deckN+=1
         startCard2= Card(self.cardDeck[self.deckN])
         self.player.addCard(startCard2)
+        #self.playerCntValue += self.player.value()
         p2 = PhotoImage(file='Resources/cards/' + startCard2.filename())
         self.LcardsPlayer.append(Label(self.window, image=p2))
         self.LcardsPlayer[self.player.inHand() - 1].image = p2
