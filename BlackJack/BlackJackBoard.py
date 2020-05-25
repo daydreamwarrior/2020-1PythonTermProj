@@ -282,7 +282,7 @@ class BlackJack:
         if self.player.value() > 21:
             self.Lstatus.configure(text="Player Busts")
             PlaySound('Resources/sounds/wrong.wav', SND_FILENAME)
-            self.playerMoney -= self.betMoney * 2
+            self.playerMoney -= self.betMoney
         elif self.dealer.value() > 21:
             self.Lstatus.configure(text="Dealer Busts")
             self.playerMoney += self.betMoney * 2
