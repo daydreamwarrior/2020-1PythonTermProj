@@ -174,10 +174,12 @@ class BlackJack:
         self.updatePlayerCards(self.player.inHand()-1)
 
         self.nCardsPlayer = 2  # 플레이어가 뽑은 카드 수?
-
+        self.hitDealer()
         #플레이어가 뽑은 카드에 따른 점수를 카드 위 라벨에 업데이트한다.
         self.LplayerPts.configure(text=str(self.player.value()))
-        self.hitDealer()
+        if self.player.value()==21: #블랙잭
+            self.blackjack()
+
 
     def updatePlayerCards(self, i):
         p = PhotoImage(file='Resources/cards/' + self.player.cards[i][1])
@@ -196,16 +198,28 @@ class BlackJack:
         self.LcardsDealer.append(Label(self.window, image=p,bd=0,bg='green'))
         self.LcardsDealer[i].image = p
         self.LcardsDealer[i].place(x=250 + (i+1)*30, y=150)
+    def blackjack(self):
+
+        self.Hit['state'] = 'disabled'
+        self.Hit['bg'] = 'gray'
+        self.Stay['state'] = 'disabled'
+        self.Stay['bg'] = 'gray'
+        self.Deal['state'] = 'disabled'
+        self.Deal['bg'] = 'gray'
+        self.Again['state'] = 'active'
+        self.Again['bg'] = 'SystemButtonFace'
+        self.opendealercard()
+        self.Lstatus.configure(text="BlackJack!")
+        PlaySound('Resources/sounds/win.wav', SND_FILENAME)
+        self.playerMoney+=int(self.betMoney*3/2)
+        self.LplayerMoney.configure(text="You have $" + str(self.playerMoney))
 
     def pressedAgain(self):
         #사용한 변수 초기화 --> 세팅은 deal()에서
         #카드는 함수 안에서 할당되니 지울필요 x..?
         self.cardDeck.clear()
-
-        #self.cardsphotoimage.clear()
         self.deckN = 0
         self.nCardsPlayer=0
-
 
         #버튼 라벨 초기화는 정상 작동
         self.setupButton()
@@ -227,7 +241,6 @@ class BlackJack:
         self.LcardsPlayer.clear()
         self.LcardsDealer.clear()
 
-
     def pressedHit(self):
         self.nCardsPlayer += 1
         self.hitPlayer(self.nCardsPlayer)
@@ -241,13 +254,10 @@ class BlackJack:
             self.dealer.addCard(test.getValue(), test.filename())
             self.updateDealerCards(self.dealer.inHand() - 1)
             self.LdealerPts.configure(text=str(self.dealer.value()))
-            if self.dealer.value() >= 17:
-                self.checkWinner()
-        else:
-            self.checkWinner()
+        self.checkWinner()
 
     def checkWinner(self):
-        self.betMoney = 0
+
         self.LplayerMoney.configure(text="You have $" + str(self.playerMoney))
         self.LbetMoney.configure(text="$" + str(self.betMoney))
         self.B50['state'] = 'disabled'
@@ -272,6 +282,7 @@ class BlackJack:
         if self.player.value() > 21:
             self.Lstatus.configure(text="Player Busts")
             PlaySound('Resources/sounds/wrong.wav', SND_FILENAME)
+            self.playerMoney -= self.betMoney * 2
         elif self.dealer.value() > 21:
             self.Lstatus.configure(text="Dealer Busts")
             self.playerMoney += self.betMoney * 2
@@ -286,5 +297,9 @@ class BlackJack:
         else:
             self.Lstatus.configure(text="Sorry you lost!")
             PlaySound('Resources/sounds/wrong.wav', SND_FILENAME)
+
+        self.LplayerMoney.configure(text="You have $" + str(self.playerMoney))
+        print(self.playerMoney)
+        self.betMoney = 0
 
 BlackJack()

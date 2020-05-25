@@ -9,7 +9,6 @@ class Player:
     def addCard(self,c,f):
         self.cards.append([c,f])
         self.N += 1
-        print(self.name, self.cards)
         return c
     def value(self):
         val=0
