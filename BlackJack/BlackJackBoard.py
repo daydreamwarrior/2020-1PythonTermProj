@@ -152,7 +152,8 @@ class BlackJack:
         test = Card(self.cardDeck[self.deckN])
         self.dealer.addCard(test.getValue(),test.filename())
         self.updateDealerCards(self.dealer.inHand()-1)
-        self.LdealerPts.configure(text=str(self.dealer.value()))
+        #print(self.dealer.cards[0][0])
+        self.LdealerPts.configure(text=str(self.dealer.value()-self.dealer.cards[0][0]))
 
     def pressedStay(self):
         self.afterStay()
@@ -160,7 +161,6 @@ class BlackJack:
     def pressedDeal(self):
         #딜 버튼이 눌렸을때 할 일
         #플레이어와 딜러에게 카드 두 장씩 나눠주기(플레이어는 오픈된 채로, 딜러는 한 장 뒤집은 채로)
-        #근데 딜러가 17 제한은 뭔말인지 모르겟다. 일단 냅둔다.
 
         self.deal()
         #첫번째카드뽑기!
@@ -179,7 +179,6 @@ class BlackJack:
         self.LplayerPts.configure(text=str(self.player.value()))
         if self.player.value()==21: #블랙잭
             self.blackjack()
-
 
     def updatePlayerCards(self, i):
         p = PhotoImage(file='Resources/cards/' + self.player.cards[i][1])
@@ -253,7 +252,7 @@ class BlackJack:
             test = Card(self.cardDeck[self.deckN])
             self.dealer.addCard(test.getValue(), test.filename())
             self.updateDealerCards(self.dealer.inHand() - 1)
-            self.LdealerPts.configure(text=str(self.dealer.value()))
+            self.LdealerPts.configure(text=str(self.dealer.value()-self.dealer.cards[0][0]))
         self.checkWinner()
 
     def checkWinner(self):
@@ -298,7 +297,7 @@ class BlackJack:
             PlaySound('Resources/sounds/wrong.wav', SND_FILENAME)
 
         self.LplayerMoney.configure(text="You have $" + str(self.playerMoney))
-        print(self.playerMoney)
         self.betMoney = 0
+        self.LbetMoney.configure(text="$"+str(self.betMoney))
 
 BlackJack()
